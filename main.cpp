@@ -73,17 +73,6 @@ int main(int argc, char **argv)
     }
 
     // Initialize producer
-    if (streamState != EGL_STREAM_STATE_CONNECTING_KHR) {
-        if(!eglQueryStreamKHR_wrapper(
-                g_display,
-                eglStream,
-                EGL_STREAM_STATE_KHR,
-                &streamState)) {
-            printf("main: eglQueryStreamKHR EGL_STREAM_STATE_KHR failed\n");
-            curesult = CUDA_ERROR_UNKNOWN;
-            goto done;
-        }
-    }
     args.inputWidth        = WIDTH;
     args.inputHeight       = HEIGHT;
     args.isARGB        = 0;
