@@ -19,8 +19,6 @@
 #include "cuda_producer.h"
 #include "eglstrm_common.h"
 
-
-
 bool printCUDAEGLFrame(const CUeglFrame &cudaEGLFrame)
 {
     printf("CUeglFrame:\n");
@@ -311,12 +309,11 @@ CUresult cudaProducerTest(test_cuda_producer_s *cudaProducer, char *file)
         else
             cudaEgl.frame.pArray[i] = cudaArr[i];
     }
-    cudaEgl.width = copyWidthInBytes[0];
-    cudaEgl.depth = 1;
+    cudaEgl.width = cudaProducer->width;
     cudaEgl.height = copyHeight[0];
-    cudaEgl.pitch = cudaProducer->pitchLinearOutput ? cudaEgl.width : 0;
-    cudaEgl.frameType = cudaProducer->pitchLinearOutput ?
-        CU_EGL_FRAME_TYPE_PITCH : CU_EGL_FRAME_TYPE_ARRAY;
+    cudaEgl.depth = 1;
+    cudaEgl.pitch = cudaEgl.width;
+    cudaEgl.frameType = CU_EGL_FRAME_TYPE_PITCH;
     cudaEgl.planeCount = surfNum;
     cudaEgl.numChannels = (eglColorFormat == CU_EGL_COLOR_FORMAT_ARGB) ? 4: 1;
     cudaEgl.eglColorFormat = eglColorFormat;
@@ -324,11 +321,13 @@ CUresult cudaProducerTest(test_cuda_producer_s *cudaProducer, char *file)
     
     printCUDAEGLFrame(cudaEgl);
     cuStatus = cuEGLStreamProducerPresentFrame(&cudaProducer->cudaConn, cudaEgl, NULL);
-    printf("FOR THIS EXAMPLE cuEGLStreamProducerPresentFrame WORKED!!!");
     if (cuStatus != CUDA_SUCCESS) {
         printf("cuda Producer present frame FAILED with custatus= %d\n", cuStatus);
         goto done;
     }
+    else
+        printf("FOR THIS EXAMPLE cuEGLStreamProducerPresentFrame WORKED!!!\n");
+       
 
 done:
     if (file_p) {

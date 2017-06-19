@@ -261,23 +261,7 @@ int checkbuf(FILE *fp1, FILE *fp2) {
 
 CUresult cudaDeviceCreateConsumer(test_cuda_consumer_s *cudaConsumer)
 {
-    CUdevice device;
     CUresult status = CUDA_SUCCESS;
-    if (CUDA_SUCCESS != (status = cuInit(0))) {
-        printf("Failed to initialize CUDA\n");
-        return status;
-    }
-    
-    if (CUDA_SUCCESS != (status = cuDeviceGet(&device, 0))) {
-        printf("failed to get CUDA device\n");
-        return status;
-    }
-    
-    if (CUDA_SUCCESS !=  (status = cuCtxCreate(&cudaConsumer->context, 0, device)) ) {
-        printf("failed to create CUDA context\n");
-        return status;
-    }
-    checkCudaErrors(cuCtxPopCurrent(&cudaConsumer->context));
     return status;
 }
 

@@ -85,35 +85,27 @@ int main(int argc, char **argv)
 
     printf("main - Cuda Producer and Consumer Initialized.\n");
 
-    for (j = 0;  j < 2; j++) {
-        printf("Running for %s frame and %s input\n",
-                args.isARGB ? "ARGB" : "YUV",
-                args.pitchLinearOutput ? "Pitchlinear" : "BlockLinear");
-        if (j == 0) {
-            curesult = cudaProducerTest(&cudaProducer, cudaProducer.fileName1);
-            if (curesult != CUDA_SUCCESS) {
-                printf("Cuda Producer Test failed for frame = %d\n", j+1);
-                goto done;
-            }
-            curesult = cudaConsumerTest(&cudaConsumer, cudaConsumer.outFile1);
-            if (curesult != CUDA_SUCCESS) {
-                printf("Cuda Consumer Test failed for frame = %d\n", j+1);
-                goto done;
-            }
-        }
-        else {
-            curesult = cudaProducerTest(&cudaProducer, cudaProducer.fileName2);
-            if (curesult != CUDA_SUCCESS) {
-                printf("Cuda Producer Test failed for frame = %d\n", j+1);
-                goto done;
-            }
+    printf("Running for YUV frame and Pitchlinear\n");
+    curesult = cudaProducerTest(&cudaProducer, cudaProducer.fileName1);
+    if (curesult != CUDA_SUCCESS) {
+        printf("Cuda Producer Test failed for frame 1\n");
+        goto done;
+    }
+    curesult = cudaConsumerTest(&cudaConsumer, cudaConsumer.outFile1);
+    if (curesult != CUDA_SUCCESS) {
+        printf("Cuda Consumer Test failed for frame = 1\n");
+        goto done;
+    }
+    curesult = cudaProducerTest(&cudaProducer, cudaProducer.fileName2);
+    if (curesult != CUDA_SUCCESS) {
+        printf("Cuda Producer Test failed for frame = 1\n");
+        goto done;
+    }
 
-            curesult = cudaConsumerTest(&cudaConsumer, cudaConsumer.outFile2);
-            if (curesult != CUDA_SUCCESS) {
-                printf("Cuda Consumer Test failed for frame = %d\n", j+1);
-                goto done;
-            }
-        }
+    curesult = cudaConsumerTest(&cudaConsumer, cudaConsumer.outFile2);
+    if (curesult != CUDA_SUCCESS) {
+        printf("Cuda Consumer Test failed for frame = 2\n");
+        goto done;
     }
 
     if (CUDA_SUCCESS != (curesult = cudaProducerDeinit(&cudaProducer))) {
